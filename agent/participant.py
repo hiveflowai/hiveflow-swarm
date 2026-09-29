@@ -42,11 +42,14 @@ def _sim_decision(d: world.Delegate, offer: dict[str, Any], r: int, harmful: boo
         return {"response": "opinion", "stance": "suspicious", "note": "looks like a scam"}
     wants = d.public_profile["goal"] in world.S()["wants_goals"]
     if rng.random() < (0.22 if wants else 0.04):
-        return {"response": "act", "stance": "interested", "note": "fits my goal, pre-apply"}
+        return {"response": "act", "stance": "interested",
+                "note": "fits my goal, pre-screen" if world.S()["id"] == "health" else "fits my goal, pre-apply"}
     stance = rng.choice(["neutral", "interested", "not_interested"])
-    return {"response": "opinion", "stance": stance, "note": {
-        "neutral": "maybe later", "interested": "rate is ok if no fees",
-        "not_interested": "not the right time for me"}[stance]}
+    notes = {"health": {"neutral": "want to ask my doctor first", "interested": "would join if eligible",
+                        "not_interested": "not the right time for me"},
+             "finance": {"neutral": "maybe later", "interested": "rate is ok if no fees",
+                         "not_interested": "can't take more debt now"}}[world.S()["id"]]
+    return {"response": "opinion", "stance": stance, "note": notes[stance]}
 
 
 def _model_decisions(model: ModelClient, hood: str, items: list[tuple[world.Delegate, dict[str, Any]]]
