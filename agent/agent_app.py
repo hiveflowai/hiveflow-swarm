@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import tempfile
 import time
 from pathlib import Path
@@ -64,7 +65,13 @@ def _coordinator(agent: AgentSession, context: Context) -> None:
         if not isinstance(state, dict):
             raise ValueError
     except ValueError:
-        state = {"round": 1, "mode": "federated", "note": agent.prompt[:200]}
+        # Plain-text prompt (Flower chat / Hub): "round 3", "finance", "isolated" steer the run
+        text = agent.prompt.lower()
+        m = re.search(r"round\s*(\d+)", text)
+        state = {"round": int(m.group(1)) if m else 2,
+                 "mode": "isolated" if "isolated" in text else "federated",
+                 "scenario": "finance" if "financ" in text else "health",
+                 "note": agent.prompt[:200]}
     model = ModelClient(str(state.get("coordinator_model") or _cfg(context, "coordinator-model", DEFAULT_COORDINATOR_MODEL)),
                         timeout=100)
     audit = _audit("coordinator", trust.coordinator())
