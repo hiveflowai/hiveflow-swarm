@@ -29,8 +29,8 @@ from .participant import leak_check
 Emit = Callable[[dict[str, Any]], None]
 
 TRIAGE_INSTRUCTIONS = (
-    "You are the security triage agent of a federation of delegate agents. A message tricked "
-    "a delegate into proposing a harmful payment, which the mandate blocked. Extract ONE short "
+    "You are the security triage agent of a federation of delegate agents. A message either tricked "
+    "a delegate (the mandate blocked it) or was flagged by delegates as a scam. Extract ONE short "
     "indicator phrase (2-5 words, copied verbatim from the message) that would catch variants "
     "of the same scam but never a normal loan offer. "
     'Output: {"phrase": "...", "family": "<short label>", "why": "<= 20 words"}'
@@ -162,7 +162,7 @@ def run_round(state: dict[str, Any], sg: SwarmGrid, coord_model: ModelClient, em
         for res in results)
     stats = {k: sum(res["stats"][k] for res in results) for k in
              ("screened", "fooled", "blocked", "awaiting_human", "identity_rejected", "model_calls",
-              "system1_blocked")}
+              "system1_blocked", "flagged")}
     stats.update({"attack_exposures": attacks_delivered, "harmful_executed": 0, "personal_data_leaks": leaks,
                   "reply_rejected": rejected_replies})
 
@@ -178,6 +178,13 @@ def run_round(state: dict[str, Any], sg: SwarmGrid, coord_model: ModelClient, em
     seen_offers = set()
     for res in results:
         for rep in res["reports"]:
+            # guardrails against false positives: never vaccinate a sender or payee the mandates trust,
+            # and a mere flag needs at least two delegates behind it
+            if rep.get("payee") in sc["trusted"] or rep.get("sender") == sc["sponsor"]:
+                emit({"type": "swarm.vaccine_skipped", "round": r, "offer": rep["offer"], "reason": "trusted sender"})
+                continue
+            if rep["rule"] == "FLAGGED_BY_DELEGATE" and rep["count"] < 2:
+                continue
             sk = scope_of(rep["hood"])
             if (sk, rep["offer"]) in seen_offers:
                 continue

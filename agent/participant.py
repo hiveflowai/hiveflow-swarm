@@ -144,6 +144,7 @@ def process_hood(hood: str, spec: dict[str, Any], ctx: dict[str, Any], model: Mo
     approvals, reports, fooled, blocked, legit_acts = [], {}, 0, 0, 0
     s1 = {o["id"]: system1.triage(o["text"]) for o in offers if any(x is o for _, x in to_model)}
     s1_blocked = 0
+    flagged = 0
     remaining = []
     for d, o in to_model:
         verdict = s1.get(o["id"])
@@ -196,6 +197,13 @@ def process_hood(hood: str, spec: dict[str, Any], ctx: dict[str, Any], model: Mo
                 legit_acts += 1
             audit.append("decision", actor, {"delegate": d.id, "offer": o["id"], "verdict": dec.verdict,
                                              "rule": dec.rule, "decided_by": decided_by})
+        if p["response"] != "act" and p.get("stance") == "suspicious":
+            # a delegate that spots a scam also triggers the immune response (detection, not only victims)
+            flagged += 1
+            reports.setdefault(o["id"], {"offer": o["id"], "sender": o["sender"], "title": o["title"],
+                                         "text": o["text"], "payee": o["ask"].get("payee"),
+                                         "rule": "FLAGGED_BY_DELEGATE", "hood": hood, "count": 0})["count"] += 1
+            audit.append("flagged", actor, {"delegate": d.id, "offer": o["id"], "decided_by": decided_by})
         outcomes[d.id]["events"].append(ev)
 
     # 4) signed human decisions from earlier rounds
@@ -240,7 +248,7 @@ def process_hood(hood: str, spec: dict[str, Any], ctx: dict[str, Any], model: Mo
         "vaccines_active": adopted,
         "stats": {"delegates": len(dels), "offers": len(offers), "screened": screened, "fooled": fooled,
                   "blocked": blocked, "awaiting_human": len(approvals), "identity_rejected": len(identity_rejected),
-                  "system1_blocked": s1_blocked, "system1": "jev" if system1.available() else "none",
+                  "system1_blocked": s1_blocked, "flagged": flagged, "system1": "jev" if system1.available() else "none",
                   "model_calls": 1 if to_model and model.available else 0},
     }
 
