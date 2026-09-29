@@ -29,10 +29,9 @@ packages = ["agent", "director"]
 testpaths = ["tests"]
 
 [tool.flwr.app]
-# TODO: set to the Flower Hub username of the publisher before `flwr app publish`
-publisher = "TODO-flower-username"
+publisher = "johnolven"
 display-name = "Hiveflow Swarm"
-color = "amber"
+color = "yellow"
 fab-format-version = 1
 flwr-version-target = "1.39.0"
 fab-include = ["agent/**/*.py", "swarmauth/**/*.py", "swarmmind/**/*.py", "LICENSE"]
