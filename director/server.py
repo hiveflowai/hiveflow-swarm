@@ -34,6 +34,7 @@ class Director:
     def __init__(self, backend: str, connection: str, mode: str, coordinator_model: str | None,
                  scenario: str = "health") -> None:
         self.backend, self.connection = backend, connection
+        self.federation = None
         self.lock = threading.Lock()
         self.subscribers: list[queue.Queue[str]] = []
         self.history: list[str] = []
@@ -132,7 +133,7 @@ class Director:
                 run_round(state, sg, ModelClient("none"), self.emit, caudit)
             else:
                 from .flower_backend import run_round as flower_round
-                flower_round(state, self.connection, self.emit)
+                flower_round(state, self.connection, self.emit, federation=self.federation)
         except Exception as err:  # noqa: BLE001
             traceback.print_exc()
             self.emit({"type": "director.run_failed", "detail": str(err)[:300]})
@@ -230,9 +231,11 @@ def main() -> None:
     ap.add_argument("--mode", choices=["federated", "isolated"], default="federated")
     ap.add_argument("--coordinator-model", default=None)
     ap.add_argument("--scenario", choices=["health", "finance"], default="health")
+    ap.add_argument("--federation", default=None, help="e.g. @johnolven/sf-hospitals on SuperGrid")
     ap.add_argument("--port", type=int, default=8080)
     args = ap.parse_args()
     director = Director(args.backend, args.connection, args.mode, args.coordinator_model, args.scenario)
+    director.federation = args.federation or ("@johnolven/sf-hospitals" if args.connection == "supergrid" else None)
     server = ThreadingHTTPServer(("0.0.0.0", args.port), make_handler(director, args.port))
     print(f"map:   http://localhost:{args.port}/?live=1")
     print(f"phone: http://{lan_ip()}:{args.port}/phone")
