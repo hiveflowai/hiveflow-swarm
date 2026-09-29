@@ -55,6 +55,7 @@ class Director:
 
     # -- events ------------------------------------------------------------------
     def emit(self, event: dict[str, Any]) -> None:
+        event = {**event, "ts": event.get("ts") or round(time.time(), 2)}  # el panel de progreso mide tiempos
         if event.get("type") == "swarm.round_complete":
             slim = dict(event)
             slim["node_audits"] = [{"node": a["node"], "entries": a["entries"][-12:]} for a in event.get("node_audits", [])]
@@ -114,6 +115,7 @@ class Director:
             state = {k: v for k, v in self.state.items()}
             self.state["decisions"] = []
             self.pending_commitments, self.pending_vaccines = {}, {}  # undecided = denied (timeout)
+        self.emit({"type": "director.round_requested", "round": state["round"], "backend": self.backend})
         threading.Thread(target=self._run, args=(state,), daemon=True).start()
         return {"ok": True, "round": state["round"]}
 

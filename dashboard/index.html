@@ -53,6 +53,17 @@
   .card .row { display: flex; gap: 6px; margin-top: 4px; }
   .card.done { border-color: var(--green); background: #0f2a17; opacity: .8; }
   .card.vax { border-color: var(--cyan); background: #0c2230; }
+  #progress-panel .top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  #pg-phase { font-size: 20px; }
+  #pg-clock { font-family: "Press Start 2P", monospace; font-size: 12px; color: var(--cyan); white-space: nowrap; }
+  #pg-bar { height: 10px; background: #000; border: 2px solid var(--line); margin: 6px 0; }
+  #pg-bar i { display: block; height: 100%; width: 0; background: var(--gold); transition: width .4s; }
+  #pg-bar.busy i { background: repeating-linear-gradient(90deg, var(--gold) 0 10px, var(--amber) 10px 20px); }
+  #pg-steps { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 12px; font-size: 17px; color: var(--dim); }
+  #pg-steps .done { color: var(--green); } #pg-steps .now { color: var(--gold); } #pg-steps .bad { color: var(--red); }
+  #pg-hoods { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; font-size: 16px; }
+  #pg-hoods span { border: 2px solid var(--line); padding: 0 5px; color: var(--dim); }
+  #pg-hoods span.ok { border-color: var(--green); color: var(--green); }
   .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px; font-size: 17px; }
   .dot { display: inline-block; width: 10px; height: 10px; margin-right: 6px; border: 2px solid #000; }
   #chart { width: 100%; height: 150px; image-rendering: pixelated; }
@@ -122,6 +133,13 @@
       <button id="live">● LIVE</button>
       <button id="next" style="display:none" class="on">NEXT ROUND ▶</button>
       <button id="approve-all" style="display:none">APPROVE ALL</button>
+    </div>
+    <div class="panel" id="progress-panel" style="display:none;margin-top:12px">
+      <div class="top"><h2 style="margin:0">ROUND PROGRESS</h2><span id="pg-clock">—</span></div>
+      <div id="pg-phase" class="muted">press NEXT ROUND ▶ to start</div>
+      <div id="pg-bar"><i></i></div>
+      <div id="pg-steps"></div>
+      <div id="pg-hoods"></div>
     </div>
     <div class="panel" style="margin-top:12px">
       <h2 id="insight-title">WHAT THE INSTITUTION LEARNS (AGGREGATES ONLY)</h2>

@@ -554,6 +554,68 @@ function playReplay(mode) {
   for (const e of REPLAY[other]) if (e.type === "swarm.round_complete") S.perRound[other][e.round] = e.stats.fooled;
   QUEUE.push(...REPLAY[mode]); drawChart();
 }
+// live round progress: fed straight from the SSE stream (not the animation queue), so it shows the
+// director's real state — which step is running, who we are waiting for, and for how long
+const PG = { round: null, t0: null, tEnd: null, step: 0, hoods: {}, fail: "", note: "" };
+const PG_STEPS = ["Round requested", "Flower run started", "Offers sent to hospitals", "Hospitals deciding",
+                  "Coordinator (model)", "Round complete"];
+function pgNow() { return Date.now() / 1000; }
+function progress(e) {
+  const t = e.ts || pgNow();
+  switch (e.type) {
+    case "director.round_requested":
+      Object.assign(PG, { round: e.round, t0: t, tEnd: null, tSent: null, step: 0, hoods: {}, fail: "", note: "", asks: 0, vax: 0 }); break;
+    case "swarm.approval_needed": PG.asks = (PG.asks || 0) + 1; break;
+    case "swarm.vaccine_candidate": PG.vax = (PG.vax || 0) + 1; break;
+    case "director.run_started": if (PG.t0 == null) PG.t0 = t; PG.step = Math.max(PG.step, 1); break;
+    case "swarm.round_start": PG.round = e.round; if (PG.t0 == null) PG.t0 = t; PG.step = Math.max(PG.step, 1); break;
+    case "swarm.nodes": for (const n of e.nodes) for (const h of n.hoods) PG.hoods[h] = PG.hoods[h] || { done: null }; break;
+    case "swarm.assigned": PG.step = 3; PG.tSent = t; break;
+    case "swarm.hood_result": if (PG.hoods[e.hood]) PG.hoods[e.hood].done = t; else PG.hoods[e.hood] = { done: t }; PG.step = 3; break;
+    case "swarm.timeout": PG.note = `${e.pending.length} hospital(s) timed out`; break;
+    case "swarm.coordinator_step": PG.step = 4; PG.note = `${e.step === "triage" ? "triaging attacks into vaccines" : "summarising for the institution"} · ${e.model}`; break;
+    case "swarm.round_complete": PG.step = 5; PG.tEnd = t; PG.note = ""; break;
+    case "swarm.no_nodes": PG.fail = "no SuperNodes online — run scripts/local_federation.sh start"; PG.tEnd = t; break;
+    case "director.run_failed": PG.fail = `run failed: ${typeof e.detail === "string" ? e.detail : JSON.stringify(e.detail || "")}`.slice(0, 160); PG.tEnd = t; break;
+    default: return;
+  }
+  renderProgress();
+}
+function renderProgress() {
+  if (PG.round == null) return;
+  const hoods = Object.entries(PG.hoods), done = hoods.filter(([, v]) => v.done).length;
+  const running = PG.tEnd == null;
+  const el = (PG.tEnd ?? pgNow()) - (PG.t0 ?? pgNow());
+  setText("pg-clock", `R${PG.round} · ${Math.max(0, Math.round(el))}s`);
+  let phase;
+  if (PG.fail) phase = `<span style="color:var(--red)">✗ ${escapeHtml(PG.fail)}</span>`;
+  else if (PG.step >= 5) {
+    const wait = [PG.asks ? `${PG.asks} signature(s)` : "", PG.vax ? `${PG.vax} vaccine(s)` : ""].filter(Boolean).join(" + ");
+    phase = `<span style="color:var(--green)">✓ complete in ${Math.round(el)}s</span>` +
+      (wait ? ` · ${wait} waiting for you, then NEXT ROUND ▶` : " · NEXT ROUND ▶ when ready");
+  }
+  else if (PG.step === 4) phase = `waiting for the coordinator model — ${escapeHtml(PG.note)}`;
+  else if (PG.step === 3) {
+    const waiting = hoods.filter(([, v]) => !v.done).map(([h]) => h);
+    phase = waiting.length ? `waiting for ${waiting.length} hospital(s): ${waiting.join(", ")}` : "all hospitals answered — scoring";
+  } else if (PG.step >= 1) phase = "starting the Flower run on the SuperLink…";
+  else phase = "building the app and starting the run…";
+  if (PG.note && PG.step === 3) phase += ` · ${escapeHtml(PG.note)}`;
+  document.getElementById("pg-phase").innerHTML = phase;
+  const frac = PG.fail ? 1 : PG.step >= 5 ? 1 : (PG.step + (PG.step === 3 && hoods.length ? done / hoods.length : 0)) / 5;
+  const bar = document.getElementById("pg-bar");
+  bar.firstElementChild.style.width = `${Math.round(frac * 100)}%`;
+  bar.classList.toggle("busy", running && !PG.fail);
+  document.getElementById("pg-steps").innerHTML = PG_STEPS.map((name, i) => {
+    const cls = PG.fail && i === Math.min(PG.step + 1, 5) ? "bad" : i < PG.step || PG.step >= 5 ? "done" : i === PG.step ? "now" : "";
+    const label = i === 3 && hoods.length ? `${name} (${done}/${hoods.length})` : name;
+    return `<div class="${cls}">${cls === "done" ? "✓" : cls === "now" ? "▸" : cls === "bad" ? "✗" : "·"} ${label}</div>`;
+  }).join("");
+  document.getElementById("pg-hoods").innerHTML = hoods.map(([h, v]) =>
+    `<span class="${v.done ? "ok" : ""}">${h}${v.done && PG.tSent ? ` ${Math.round(v.done - PG.tSent)}s` : v.done ? " ✓" : " …"}</span>`).join("");
+}
+setInterval(() => { if (SOURCE === "live" && PG.round != null && PG.tEnd == null) renderProgress(); }, 1000);
+
 function goLive() {
   SOURCE = "live"; setText("src", "● LIVE"); resetScene(S.mode);
   for (const k of ["federated", "isolated"]) for (const e of REPLAY[k]) if (e.type === "swarm.round_complete") S.perRound[k][e.round] = e.stats.fooled;
@@ -566,7 +628,8 @@ function goLive() {
     if (window.QRCode) new QRCode(document.getElementById("qr"), { text: info.phone_url, width: 96, height: 96 });
   }).catch(() => {});
   const es = new EventSource("/events");
-  es.onmessage = (m) => { try { QUEUE.push(JSON.parse(m.data)); } catch (err) { /* ignore */ } };
+  document.getElementById("progress-panel").style.display = "block";
+  es.onmessage = (m) => { try { const e = JSON.parse(m.data); progress(e); QUEUE.push(e); } catch (err) { /* ignore */ } };
   es.onerror = () => banner("LIVE STREAM DISCONNECTED");
 }
 
