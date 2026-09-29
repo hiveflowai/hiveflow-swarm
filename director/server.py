@@ -12,7 +12,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import queue
+import re
+import shutil
+import subprocess
 import socket
 import threading
 import time
@@ -153,7 +157,25 @@ def lan_ip() -> str:
         s.close()
 
 
-def make_handler(director: Director, port: int):
+def start_tunnel(port: int) -> str:
+    """Quick tunnel de cloudflared (trycloudflare.com) hacia el director; devuelve la URL pública."""
+    if not shutil.which("cloudflared"):
+        raise SystemExit("--tunnel requiere cloudflared (brew install cloudflared)")
+    proc = subprocess.Popen(["cloudflared", "tunnel", "--no-autoupdate", "--url", f"http://localhost:{port}"],
+                            stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True)
+    deadline = time.time() + 30
+    for line in proc.stderr:  # cloudflared imprime la URL en stderr
+        m = re.search(r"https://[a-z0-9-]+\.trycloudflare\.com", line)
+        if m:
+            threading.Thread(target=lambda: [None for _ in proc.stderr], daemon=True).start()  # drena el pipe
+            return m.group(0)
+        if time.time() > deadline:
+            break
+    proc.kill()
+    raise SystemExit("cloudflared no devolvió una URL de túnel")
+
+
+def make_handler(director: Director, port: int, phone_url: str):
     class Handler(SimpleHTTPRequestHandler):
         def __init__(self, *a, **kw):
             super().__init__(*a, directory=str(DASH), **kw)
@@ -199,7 +221,7 @@ def make_handler(director: Director, port: int):
             if self.path.startswith("/api/pending"):
                 return self._json(director.pending())
             if self.path.startswith("/api/info"):
-                return self._json({"scenario": director.state["scenario"], "phone_url": f"http://{lan_ip()}:{port}/phone", "backend": director.backend,
+                return self._json({"scenario": director.state["scenario"], "phone_url": phone_url, "backend": director.backend,
                                    "connection": director.connection})
             if self.path.startswith("/phone"):
                 self.path = "/phone.html"
@@ -233,12 +255,17 @@ def main() -> None:
     ap.add_argument("--scenario", choices=["health", "finance"], default="health")
     ap.add_argument("--federation", default=None, help="e.g. @johnolven/sf-hospitals on SuperGrid")
     ap.add_argument("--port", type=int, default=8080)
+    ap.add_argument("--public-url", default=os.environ.get("SWARM_PUBLIC_URL"),
+                    help="URL pública (túnel) para el QR del teléfono, p. ej. https://swarm.hiveflow.ai")
+    ap.add_argument("--tunnel", action="store_true", help="levanta un quick tunnel de cloudflared y lo usa en el QR")
     args = ap.parse_args()
+    base = args.public_url or (start_tunnel(args.port) if args.tunnel else f"http://{lan_ip()}:{args.port}")
+    phone_url = base.rstrip("/") + "/phone"
     director = Director(args.backend, args.connection, args.mode, args.coordinator_model, args.scenario)
     director.federation = args.federation or ("@johnolven/sf-hospitals" if args.connection == "supergrid" else None)
-    server = ThreadingHTTPServer(("0.0.0.0", args.port), make_handler(director, args.port))
+    server = ThreadingHTTPServer(("0.0.0.0", args.port), make_handler(director, args.port, phone_url))
     print(f"map:   http://localhost:{args.port}/?live=1")
-    print(f"phone: http://{lan_ip()}:{args.port}/phone")
+    print(f"phone: {phone_url}")
     print(f"backend={args.backend} connection={args.connection} mode={args.mode}")
     server.serve_forever()
 

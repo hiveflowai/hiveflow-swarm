@@ -8,11 +8,29 @@ DIR=runs/fed
 HOODS=("mission:37.7575,-122.4160" "soma:37.7770,-122.4000" "chinatown:37.7975,-122.4105"
        "marina:37.8005,-122.4380" "alamo:37.7775,-122.4385" "sunset:37.7560,-122.4880")
 
-if [[ "${1:-start}" == "stop" ]]; then
+stop_all() {
   pkill -f "flower-supernode.*runs/fed" || true
   pkill -f "flower-superlink.*runs/fed" || true
+  # espera a que se liberen los puertos (SuperLink 9091-9093, SuperNodes 9200-9205)
+  for _ in $(seq 1 20); do
+    lsof -nP -iTCP:9091-9093 -iTCP:9200-9205 -sTCP:LISTEN >/dev/null 2>&1 || return 0
+    sleep 1
+  done
+  echo "aviso: todavía hay procesos ocupando los puertos de la federación" >&2
+}
+
+if [[ "${1:-start}" == "stop" ]]; then
+  stop_all
   exit 0
 fi
+
+# start es idempotente: si quedó una federación previa viva, sus puertos tumban a los SuperNodes nuevos
+stop_all
+# el state.db viejo aún marca "online" a los nodos recién matados y el SuperLink rechaza su reactivación
+# ("could not be activated"); se arranca con estado limpio y el anterior queda como state.db.prev
+for f in "$DIR"/state.db "$DIR"/state.db-shm "$DIR"/state.db-wal; do
+  if [[ -f "$f" ]]; then mv -f "$f" "${f/state.db/state.db.prev}"; fi
+done
 
 # Model access for AgentApps (FLWR_MODEL_API_KEY, optional FLWR_MODEL_API_ENDPOINT) from .env
 if [[ -f .env ]]; then set -a; source .env; set +a; fi
@@ -58,5 +76,11 @@ for entry in "${HOODS[@]}"; do
     > "$DIR/supernode-$hood.log" 2>&1 &
   port=$((port + 1))
 done
-sleep 8
+# espera a que los 6 SuperNodes estén online (hasta ~60 s) en vez de un sleep fijo
+for _ in $(seq 1 30); do
+  online=$(uv run flwr supernode ls sf-local 2>/dev/null | grep -c "online" || true)
+  [[ "$online" -ge ${#HOODS[@]} ]] && break
+  sleep 2
+done
 uv run flwr supernode ls sf-local
+[[ "${online:-0}" -ge ${#HOODS[@]} ]] || echo "aviso: solo ${online:-0}/${#HOODS[@]} SuperNodes online; revisa $DIR/supernode-*.log" >&2
