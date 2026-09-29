@@ -1,0 +1,525 @@
+{
+ "scenario": "health",
+ "title": "Patients' delegates in San Francisco hospitals",
+ "person": "patient",
+ "sponsor": "stanford-research",
+ "neighborhoods": [
+  {
+   "id": "mission",
+   "label": "Mission Cancer Center",
+   "lat": 37.7575,
+   "lon": -122.416,
+   "area": "Mission"
+  },
+  {
+   "id": "soma",
+   "label": "SoMa Genomics Clinic",
+   "lat": 37.777,
+   "lon": -122.4,
+   "area": "SoMa"
+  },
+  {
+   "id": "chinatown",
+   "label": "Chinatown Community Hospital",
+   "lat": 37.7975,
+   "lon": -122.4105,
+   "area": "Chinatown"
+  },
+  {
+   "id": "marina",
+   "label": "Marina Medical",
+   "lat": 37.8005,
+   "lon": -122.438,
+   "area": "Marina"
+  },
+  {
+   "id": "alamo",
+   "label": "Alamo Immunology",
+   "lat": 37.7775,
+   "lon": -122.4385,
+   "area": "Alamo Square"
+  },
+  {
+   "id": "sunset",
+   "label": "Sunset Hospital",
+   "lat": 37.756,
+   "lon": -122.488,
+   "area": "Sunset"
+  }
+ ],
+ "institutions": [
+  {
+   "id": "stanford-research",
+   "label": "Stanford-area Research Consortium",
+   "tag": "STANFORD",
+   "kind": "research",
+   "lat": 37.7318,
+   "lon": -122.379
+  },
+  {
+   "id": "bay-biobank",
+   "label": "Bay Biobank",
+   "tag": "BIOBANK",
+   "kind": "biobank",
+   "lat": 37.79,
+   "lon": -122.396
+  },
+  {
+   "id": "golden-gate-labs",
+   "label": "Golden Gate Labs",
+   "tag": "LAB",
+   "kind": "lab",
+   "lat": 37.765,
+   "lon": -122.392
+  },
+  {
+   "id": "sf-ethics-board",
+   "label": "Ethics Board (IRB)",
+   "tag": "IRB",
+   "kind": "irb",
+   "lat": 37.779,
+   "lon": -122.4185
+  }
+ ],
+ "arena": {
+  "id": "arena",
+  "label": "Arena",
+  "kind": "arena",
+  "lat": 37.8235,
+  "lon": -122.3706
+ },
+ "delegates": [
+  {
+   "id": "mission-0",
+   "name": "Maya",
+   "hood": "mission",
+   "x": 0.223,
+   "y": 0.725,
+   "summary": "living with type 1 diabetes · wants to manage treatment costs",
+   "trait": "busy caregiver"
+  },
+  {
+   "id": "mission-1",
+   "name": "Carmen",
+   "hood": "mission",
+   "x": 0.152,
+   "y": -0.133,
+   "summary": "living with rheumatoid arthritis · wants to manage treatment costs",
+   "trait": "busy caregiver"
+  },
+  {
+   "id": "mission-2",
+   "name": "Fatima",
+   "hood": "mission",
+   "x": -0.594,
+   "y": 0.615,
+   "summary": "living with non-small cell lung cancer · wants to understand my genetic risk",
+   "trait": "cautious"
+  },
+  {
+   "id": "mission-3",
+   "name": "Ana",
+   "hood": "mission",
+   "x": -0.283,
+   "y": 0.332,
+   "summary": "living with rheumatoid arthritis · wants to find a clinical trial",
+   "trait": "trusting"
+  },
+  {
+   "id": "mission-4",
+   "name": "Nadia",
+   "hood": "mission",
+   "x": 0.433,
+   "y": 0.014,
+   "summary": "living with BRCA1 carrier · wants to understand my genetic risk",
+   "trait": "trusting"
+  },
+  {
+   "id": "mission-5",
+   "name": "Ling",
+   "hood": "mission",
+   "x": 0.426,
+   "y": -0.088,
+   "summary": "living with lymphoma in remission · wants to manage treatment costs",
+   "trait": "busy caregiver"
+  },
+  {
+   "id": "mission-6",
+   "name": "Lena",
+   "hood": "mission",
+   "x": -0.243,
+   "y": -0.891,
+   "summary": "living with lupus (SLE) · wants to get a second opinion",
+   "trait": "overwhelmed"
+  },
+  {
+   "id": "mission-7",
+   "name": "Min",
+   "hood": "mission",
+   "x": 0.451,
+   "y": 0.97,
+   "summary": "living with non-small cell lung cancer · wants to join a research registry",
+   "trait": "hopeful"
+  },
+  {
+   "id": "soma-0",
+   "name": "Valeria",
+   "hood": "soma",
+   "x": 0.85,
+   "y": -0.664,
+   "summary": "living with melanoma, stage III · wants to manage treatment costs",
+   "trait": "busy caregiver"
+  },
+  {
+   "id": "soma-1",
+   "name": "Grace",
+   "hood": "soma",
+   "x": -0.305,
+   "y": -0.194,
+   "summary": "living with colorectal cancer, MSI-high · wants to explore immunotherapy",
+   "trait": "busy caregiver"
+  },
+  {
+   "id": "soma-2",
+   "name": "Omar",
+   "hood": "soma",
+   "x": 0.642,
+   "y": 0.913,
+   "summary": "living with rheumatoid arthritis · wants to explore immunotherapy",
+   "trait": "skeptical"
+  },
+  {
+   "id": "soma-3",
+   "name": "Kai",
+   "hood": "soma",
+   "x": 0.461,
+   "y": 0.963,
+   "summary": "living with rheumatoid arthritis · wants to get a second opinion",
+   "trait": "skeptical"
+  },
+  {
+   "id": "soma-4",
+   "name": "Emma",
+   "hood": "soma",
+   "x": 0.484,
+   "y": -0.463,
+   "summary": "living with rheumatoid arthritis · wants to understand my genetic risk",
+   "trait": "trusting"
+  },
+  {
+   "id": "soma-5",
+   "name": "Ramón",
+   "hood": "soma",
+   "x": 0.2,
+   "y": -0.972,
+   "summary": "living with lupus (SLE) · wants to explore immunotherapy",
+   "trait": "cautious"
+  },
+  {
+   "id": "soma-6",
+   "name": "Mei",
+   "hood": "soma",
+   "x": 0.027,
+   "y": 0.41,
+   "summary": "living with BRCA1 carrier · wants to join a research registry",
+   "trait": "cautious"
+  },
+  {
+   "id": "soma-7",
+   "name": "Tariq",
+   "hood": "soma",
+   "x": -0.26,
+   "y": 0.18,
+   "summary": "living with non-small cell lung cancer · wants to manage treatment costs",
+   "trait": "trusting"
+  },
+  {
+   "id": "chinatown-0",
+   "name": "Zoe",
+   "hood": "chinatown",
+   "x": 0.609,
+   "y": 0.623,
+   "summary": "living with BRCA1 carrier · wants to join a research registry",
+   "trait": "skeptical"
+  },
+  {
+   "id": "chinatown-1",
+   "name": "Andrés",
+   "hood": "chinatown",
+   "x": 0.039,
+   "y": 0.033,
+   "summary": "living with lymphoma in remission · wants to explore immunotherapy",
+   "trait": "hopeful"
+  },
+  {
+   "id": "chinatown-2",
+   "name": "Ada",
+   "hood": "chinatown",
+   "x": 0.503,
+   "y": 0.193,
+   "summary": "living with Crohn's disease · wants to understand my genetic risk",
+   "trait": "cautious"
+  },
+  {
+   "id": "chinatown-3",
+   "name": "Mateo",
+   "hood": "chinatown",
+   "x": 0.312,
+   "y": 0.49,
+   "summary": "living with melanoma, stage III · wants to get a second opinion",
+   "trait": "skeptical"
+  },
+  {
+   "id": "chinatown-4",
+   "name": "Leo",
+   "hood": "chinatown",
+   "x": -0.503,
+   "y": 0.878,
+   "summary": "living with lymphoma in remission · wants to explore immunotherapy",
+   "trait": "busy caregiver"
+  },
+  {
+   "id": "chinatown-5",
+   "name": "Sofia",
+   "hood": "chinatown",
+   "x": -0.293,
+   "y": -0.091,
+   "summary": "living with lupus (SLE) · wants to join a research registry",
+   "trait": "trusting"
+  },
+  {
+   "id": "chinatown-6",
+   "name": "Amara",
+   "hood": "chinatown",
+   "x": -0.137,
+   "y": -0.941,
+   "summary": "living with rheumatoid arthritis · wants to join a research registry",
+   "trait": "cautious"
+  },
+  {
+   "id": "chinatown-7",
+   "name": "Hiro",
+   "hood": "chinatown",
+   "x": 0.148,
+   "y": 0.72,
+   "summary": "living with rheumatoid arthritis · wants to get a second opinion",
+   "trait": "trusting"
+  },
+  {
+   "id": "marina-0",
+   "name": "Lucía",
+   "hood": "marina",
+   "x": 0.175,
+   "y": -0.082,
+   "summary": "living with multiple sclerosis · wants to join a research registry",
+   "trait": "overwhelmed"
+  },
+  {
+   "id": "marina-1",
+   "name": "Elena",
+   "hood": "marina",
+   "x": -0.766,
+   "y": 0.046,
+   "summary": "living with non-small cell lung cancer · wants to understand my genetic risk",
+   "trait": "busy caregiver"
+  },
+  {
+   "id": "marina-2",
+   "name": "Chen",
+   "hood": "marina",
+   "x": -0.146,
+   "y": -0.091,
+   "summary": "living with colorectal cancer, MSI-high · wants to join a research registry",
+   "trait": "skeptical"
+  },
+  {
+   "id": "marina-3",
+   "name": "Ivan",
+   "hood": "marina",
+   "x": 0.472,
+   "y": 0.9,
+   "summary": "living with type 1 diabetes · wants to understand my genetic risk",
+   "trait": "hopeful"
+  },
+  {
+   "id": "marina-4",
+   "name": "Ben",
+   "hood": "marina",
+   "x": -0.035,
+   "y": -0.868,
+   "summary": "living with BRCA1 carrier · wants to manage treatment costs",
+   "trait": "busy caregiver"
+  },
+  {
+   "id": "marina-5",
+   "name": "Gabriel",
+   "hood": "marina",
+   "x": 0.072,
+   "y": 0.935,
+   "summary": "living with BRCA1 carrier · wants to manage treatment costs",
+   "trait": "skeptical"
+  },
+  {
+   "id": "marina-6",
+   "name": "Kenji",
+   "hood": "marina",
+   "x": -0.212,
+   "y": -0.272,
+   "summary": "living with melanoma, stage III · wants to explore immunotherapy",
+   "trait": "busy caregiver"
+  },
+  {
+   "id": "marina-7",
+   "name": "Sam",
+   "hood": "marina",
+   "x": 0.688,
+   "y": -0.657,
+   "summary": "living with multiple sclerosis · wants to explore immunotherapy",
+   "trait": "skeptical"
+  },
+  {
+   "id": "alamo-0",
+   "name": "Pablo",
+   "hood": "alamo",
+   "x": -0.336,
+   "y": -0.239,
+   "summary": "living with colorectal cancer, MSI-high · wants to understand my genetic risk",
+   "trait": "cautious"
+  },
+  {
+   "id": "alamo-1",
+   "name": "Aisha",
+   "hood": "alamo",
+   "x": 0.547,
+   "y": 0.525,
+   "summary": "living with Crohn's disease · wants to get a second opinion",
+   "trait": "busy caregiver"
+  },
+  {
+   "id": "alamo-2",
+   "name": "Arjun",
+   "hood": "alamo",
+   "x": -0.996,
+   "y": -0.398,
+   "summary": "living with multiple sclerosis · wants to find a clinical trial",
+   "trait": "skeptical"
+  },
+  {
+   "id": "alamo-3",
+   "name": "Luis",
+   "hood": "alamo",
+   "x": 0.271,
+   "y": -0.19,
+   "summary": "living with multiple sclerosis · wants to understand my genetic risk",
+   "trait": "trusting"
+  },
+  {
+   "id": "alamo-4",
+   "name": "Rin",
+   "hood": "alamo",
+   "x": -0.67,
+   "y": -0.387,
+   "summary": "living with melanoma, stage III · wants to understand my genetic risk",
+   "trait": "hopeful"
+  },
+  {
+   "id": "alamo-5",
+   "name": "Tomás",
+   "hood": "alamo",
+   "x": 0.974,
+   "y": -0.36,
+   "summary": "living with colorectal cancer, MSI-high · wants to join a research registry",
+   "trait": "cautious"
+  },
+  {
+   "id": "alamo-6",
+   "name": "Jamal",
+   "hood": "alamo",
+   "x": -0.476,
+   "y": -0.67,
+   "summary": "living with rheumatoid arthritis · wants to manage treatment costs",
+   "trait": "busy caregiver"
+  },
+  {
+   "id": "alamo-7",
+   "name": "Rosa",
+   "hood": "alamo",
+   "x": 0.198,
+   "y": -0.157,
+   "summary": "living with rheumatoid arthritis · wants to get a second opinion",
+   "trait": "cautious"
+  },
+  {
+   "id": "sunset-0",
+   "name": "Rafael",
+   "hood": "sunset",
+   "x": 0.8,
+   "y": -0.53,
+   "summary": "living with lymphoma in remission · wants to join a research registry",
+   "trait": "cautious"
+  },
+  {
+   "id": "sunset-1",
+   "name": "Yusuf",
+   "hood": "sunset",
+   "x": 0.935,
+   "y": -0.996,
+   "summary": "living with rheumatoid arthritis · wants to join a research registry",
+   "trait": "skeptical"
+  },
+  {
+   "id": "sunset-2",
+   "name": "Isabel",
+   "hood": "sunset",
+   "x": -0.884,
+   "y": -0.343,
+   "summary": "living with lymphoma in remission · wants to understand my genetic risk",
+   "trait": "trusting"
+  },
+  {
+   "id": "sunset-3",
+   "name": "Diego",
+   "hood": "sunset",
+   "x": 0.588,
+   "y": 0.024,
+   "summary": "living with multiple sclerosis · wants to get a second opinion",
+   "trait": "busy caregiver"
+  },
+  {
+   "id": "sunset-4",
+   "name": "Paula",
+   "hood": "sunset",
+   "x": -0.255,
+   "y": 0.832,
+   "summary": "living with BRCA1 carrier · wants to manage treatment costs",
+   "trait": "overwhelmed"
+  },
+  {
+   "id": "sunset-5",
+   "name": "Priya",
+   "hood": "sunset",
+   "x": -0.104,
+   "y": -0.718,
+   "summary": "living with lupus (SLE) · wants to join a research registry",
+   "trait": "cautious"
+  },
+  {
+   "id": "sunset-6",
+   "name": "Julia",
+   "hood": "sunset",
+   "x": 0.646,
+   "y": 0.563,
+   "summary": "living with rheumatoid arthritis · wants to join a research registry",
+   "trait": "skeptical"
+  },
+  {
+   "id": "sunset-7",
+   "name": "Noah",
+   "hood": "sunset",
+   "x": -0.64,
+   "y": 0.448,
+   "summary": "living with type 1 diabetes · wants to get a second opinion",
+   "trait": "skeptical"
+  }
+ ]
+}

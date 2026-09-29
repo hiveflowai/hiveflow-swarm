@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Delegate Approvals</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #0d0b1a; --panel: #17142b; --ink: #f4ecd8; --dim: #9a92b8; --green: #5ee27a; --red: #ff4d5e;
+          --amber: #ffb627; --cyan: #56e0ff; --gold: #ffd84d; --line: #3a3366; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: "VT323", monospace; font-size: 22px; padding: 16px; }
+  h1 { font-family: "Press Start 2P", monospace; font-size: 13px; color: var(--gold); line-height: 1.6; }
+  .card { background: var(--panel); border: 3px solid var(--amber); padding: 12px; margin: 12px 0; box-shadow: 4px 4px 0 #000; }
+  .card.vax { border-color: var(--cyan); }
+  .row { display: flex; gap: 10px; margin-top: 10px; }
+  button { flex: 1; font-family: "Press Start 2P", monospace; font-size: 12px; padding: 14px 8px; border: 3px solid;
+           background: #000; color: var(--ink); box-shadow: 3px 3px 0 #000; }
+  .ok { border-color: var(--green); color: var(--green); } .no { border-color: var(--red); color: var(--red); }
+  .muted { color: var(--dim); font-size: 18px; }
+</style>
+</head>
+<body>
+<h1>YOU ARE THE HUMAN IN THE LOOP</h1>
+<p class="muted">Delegates can explore and give opinions on their own. Anything that commits a person — or changes the
+  federation's defences — waits for a human signature. Your tap is signed with the principal's Ed25519 key on the
+  operator's machine; this phone is only the approval channel.</p>
+<div id="list" class="muted">loading…</div>
+<script>
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  async function send(kind, id, approved) {
+    await fetch("/api/decide", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ kind, id, approved }) });
+    load();
+  }
+  async function load() {
+    const p = await (await fetch("/api/pending")).json();
+    const items = [
+      ...p.vaccines.map((v) => ({ kind: "vaccine", id: v.request.id, cls: "vax",
+        html: `🛡 <b>Adopt vaccine?</b><br>block ${esc(v.pattern.kind)} “${esc(v.pattern.indicators.join(", "))}”<br><span class="muted">found in ${esc(v.origin_hood)} · proposed by ${esc(v.decided_by)} · pattern only, no data</span>` })),
+      ...p.commitments.map((c) => ({ kind: "commitment", id: c.id, cls: "",
+        html: `❗ <b>${esc(c.action.delegate)}</b> (${esc(c.action.hood)}) wants to<br>${esc(c.action.title)} · <code>${esc(c.action.scope)}</code><br><span class="muted">within mandate · needs the person's signature</span>` })),
+    ];
+    document.getElementById("list").innerHTML = items.length ? items.map((i) =>
+      `<div class="card ${i.cls}">${i.html}<div class="row"><button class="ok" onclick="send('${i.kind}','${i.id}',true)">APPROVE</button><button class="no" onclick="send('${i.kind}','${i.id}',false)">DENY</button></div></div>`).join("")
+      : `<p class="muted">Round ${p.round}${p.running ? " is running…" : ""}. Nothing waiting for you right now.</p>`;
+  }
+  load(); setInterval(load, 2000);
+</script>
+</body>
+</html>

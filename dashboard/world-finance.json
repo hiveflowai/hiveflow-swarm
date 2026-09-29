@@ -1,0 +1,533 @@
+{
+ "scenario": "finance",
+ "title": "People's delegates in San Francisco neighborhoods",
+ "person": "person",
+ "sponsor": "mission-micro",
+ "neighborhoods": [
+  {
+   "id": "mission",
+   "label": "Mission",
+   "lat": 37.7575,
+   "lon": -122.416,
+   "area": "Mission"
+  },
+  {
+   "id": "soma",
+   "label": "SoMa",
+   "lat": 37.777,
+   "lon": -122.4,
+   "area": "SoMa"
+  },
+  {
+   "id": "chinatown",
+   "label": "Chinatown",
+   "lat": 37.7975,
+   "lon": -122.4105,
+   "area": "Chinatown"
+  },
+  {
+   "id": "marina",
+   "label": "Marina",
+   "lat": 37.8005,
+   "lon": -122.438,
+   "area": "Marina"
+  },
+  {
+   "id": "alamo",
+   "label": "Alamo Square",
+   "lat": 37.7775,
+   "lon": -122.4385,
+   "area": "Alamo Square"
+  },
+  {
+   "id": "sunset",
+   "label": "Sunset",
+   "lat": 37.756,
+   "lon": -122.488,
+   "area": "Sunset"
+  }
+ ],
+ "institutions": [
+  {
+   "id": "bay-commons-bank",
+   "label": "Bay Commons Bank",
+   "tag": "BANK",
+   "kind": "bank",
+   "lat": 37.7935,
+   "lon": -122.3965
+  },
+  {
+   "id": "mission-micro",
+   "label": "Mission Microcredit",
+   "tag": "MICRO",
+   "kind": "microfinance",
+   "lat": 37.752,
+   "lon": -122.4085
+  },
+  {
+   "id": "fogpay",
+   "label": "FogPay",
+   "tag": "PAY",
+   "kind": "fintech",
+   "lat": 37.7855,
+   "lon": -122.3915
+  },
+  {
+   "id": "golden-bureau",
+   "label": "Golden Credit Bureau",
+   "tag": "BUREAU",
+   "kind": "bureau",
+   "lat": 37.766,
+   "lon": -122.392
+  },
+  {
+   "id": "sf-oversight",
+   "label": "Oversight Office",
+   "tag": "REG",
+   "kind": "regulator",
+   "lat": 37.779,
+   "lon": -122.4185
+  }
+ ],
+ "arena": {
+  "id": "arena",
+  "label": "Arena",
+  "kind": "arena",
+  "lat": 37.8235,
+  "lon": -122.3706
+ },
+ "delegates": [
+  {
+   "id": "mission-0",
+   "name": "Hiro",
+   "hood": "mission",
+   "x": -0.617,
+   "y": 0.934,
+   "summary": "barista · wants to grow a small business",
+   "trait": "trusting"
+  },
+  {
+   "id": "mission-1",
+   "name": "Ada",
+   "hood": "mission",
+   "x": 0.671,
+   "y": -0.262,
+   "summary": "tailor · wants to pay for a course",
+   "trait": "deal-seeker"
+  },
+  {
+   "id": "mission-2",
+   "name": "Paula",
+   "hood": "mission",
+   "x": -0.268,
+   "y": 0.578,
+   "summary": "home care worker · wants to grow a small business",
+   "trait": "cautious"
+  },
+  {
+   "id": "mission-3",
+   "name": "Tomás",
+   "hood": "mission",
+   "x": 0.777,
+   "y": 0.358,
+   "summary": "muralist · wants to build an emergency fund",
+   "trait": "busy"
+  },
+  {
+   "id": "mission-4",
+   "name": "Gabriel",
+   "hood": "mission",
+   "x": -0.987,
+   "y": 0.63,
+   "summary": "student · wants to consolidate debt",
+   "trait": "busy"
+  },
+  {
+   "id": "mission-5",
+   "name": "Aisha",
+   "hood": "mission",
+   "x": -0.963,
+   "y": -0.85,
+   "summary": "nurse · wants to pay for a course",
+   "trait": "anxious about money"
+  },
+  {
+   "id": "mission-6",
+   "name": "Fatima",
+   "hood": "mission",
+   "x": 0.797,
+   "y": 0.121,
+   "summary": "tailor · wants to build an emergency fund",
+   "trait": "busy"
+  },
+  {
+   "id": "mission-7",
+   "name": "Ivan",
+   "hood": "mission",
+   "x": -0.014,
+   "y": 0.782,
+   "summary": "barista · wants to pay for a course",
+   "trait": "trusting"
+  },
+  {
+   "id": "soma-0",
+   "name": "Sam",
+   "hood": "soma",
+   "x": 0.466,
+   "y": 0.184,
+   "summary": "retired teacher · wants to consolidate debt",
+   "trait": "trusting"
+  },
+  {
+   "id": "soma-1",
+   "name": "Chen",
+   "hood": "soma",
+   "x": 0.199,
+   "y": -0.641,
+   "summary": "barista · wants to buy a work tool",
+   "trait": "busy"
+  },
+  {
+   "id": "soma-2",
+   "name": "Ling",
+   "hood": "soma",
+   "x": -0.005,
+   "y": -0.797,
+   "summary": "student · wants to grow a small business",
+   "trait": "skeptical"
+  },
+  {
+   "id": "soma-3",
+   "name": "Lena",
+   "hood": "soma",
+   "x": 0.726,
+   "y": 0.093,
+   "summary": "rideshare driver · wants to cover rent gaps",
+   "trait": "busy"
+  },
+  {
+   "id": "soma-4",
+   "name": "Amara",
+   "hood": "soma",
+   "x": -0.885,
+   "y": 0.506,
+   "summary": "street-food vendor · wants to cover rent gaps",
+   "trait": "trusting"
+  },
+  {
+   "id": "soma-5",
+   "name": "Ben",
+   "hood": "soma",
+   "x": 0.283,
+   "y": -0.544,
+   "summary": "line cook · wants to build an emergency fund",
+   "trait": "deal-seeker"
+  },
+  {
+   "id": "soma-6",
+   "name": "Rosa",
+   "hood": "soma",
+   "x": -0.118,
+   "y": -0.367,
+   "summary": "student · wants to build an emergency fund",
+   "trait": "cautious"
+  },
+  {
+   "id": "soma-7",
+   "name": "Nadia",
+   "hood": "soma",
+   "x": -0.058,
+   "y": 0.458,
+   "summary": "street-food vendor · wants to build an emergency fund",
+   "trait": "busy"
+  },
+  {
+   "id": "chinatown-0",
+   "name": "Omar",
+   "hood": "chinatown",
+   "x": -0.123,
+   "y": 0.852,
+   "summary": "retired teacher · wants to pay for a course",
+   "trait": "deal-seeker"
+  },
+  {
+   "id": "chinatown-1",
+   "name": "Tariq",
+   "hood": "chinatown",
+   "x": 0.001,
+   "y": 0.065,
+   "summary": "street-food vendor · wants to pay for a course",
+   "trait": "skeptical"
+  },
+  {
+   "id": "chinatown-2",
+   "name": "Zoe",
+   "hood": "chinatown",
+   "x": -0.34,
+   "y": -0.498,
+   "summary": "street-food vendor · wants to build an emergency fund",
+   "trait": "anxious about money"
+  },
+  {
+   "id": "chinatown-3",
+   "name": "Julia",
+   "hood": "chinatown",
+   "x": -0.398,
+   "y": 0.718,
+   "summary": "rideshare driver · wants to buy a work tool",
+   "trait": "anxious about money"
+  },
+  {
+   "id": "chinatown-4",
+   "name": "Andrés",
+   "hood": "chinatown",
+   "x": -0.279,
+   "y": 0.403,
+   "summary": "tailor · wants to pay for a course",
+   "trait": "trusting"
+  },
+  {
+   "id": "chinatown-5",
+   "name": "Kai",
+   "hood": "chinatown",
+   "x": -0.556,
+   "y": 0.524,
+   "summary": "retired teacher · wants to build an emergency fund",
+   "trait": "anxious about money"
+  },
+  {
+   "id": "chinatown-6",
+   "name": "Pablo",
+   "hood": "chinatown",
+   "x": 0.346,
+   "y": -0.843,
+   "summary": "home care worker · wants to consolidate debt",
+   "trait": "deal-seeker"
+  },
+  {
+   "id": "chinatown-7",
+   "name": "Emma",
+   "hood": "chinatown",
+   "x": -0.463,
+   "y": -0.835,
+   "summary": "nurse · wants to pay for a course",
+   "trait": "anxious about money"
+  },
+  {
+   "id": "marina-0",
+   "name": "Yusuf",
+   "hood": "marina",
+   "x": 0.44,
+   "y": -0.826,
+   "summary": "home care worker · wants to consolidate debt",
+   "trait": "deal-seeker"
+  },
+  {
+   "id": "marina-1",
+   "name": "Kenji",
+   "hood": "marina",
+   "x": 0.617,
+   "y": 0.927,
+   "summary": "student · wants to build an emergency fund",
+   "trait": "trusting"
+  },
+  {
+   "id": "marina-2",
+   "name": "Min",
+   "hood": "marina",
+   "x": -0.252,
+   "y": -0.747,
+   "summary": "line cook · wants to consolidate debt",
+   "trait": "anxious about money"
+  },
+  {
+   "id": "marina-3",
+   "name": "Ramón",
+   "hood": "marina",
+   "x": 0.443,
+   "y": 0.541,
+   "summary": "bike mechanic · wants to buy a work tool",
+   "trait": "busy"
+  },
+  {
+   "id": "marina-4",
+   "name": "Leo",
+   "hood": "marina",
+   "x": -0.012,
+   "y": 0.073,
+   "summary": "bookkeeper · wants to build an emergency fund",
+   "trait": "anxious about money"
+  },
+  {
+   "id": "marina-5",
+   "name": "Maya",
+   "hood": "marina",
+   "x": 0.903,
+   "y": -0.855,
+   "summary": "barista · wants to cover rent gaps",
+   "trait": "busy"
+  },
+  {
+   "id": "marina-6",
+   "name": "Arjun",
+   "hood": "marina",
+   "x": -0.264,
+   "y": -0.78,
+   "summary": "bookkeeper · wants to pay for a course",
+   "trait": "skeptical"
+  },
+  {
+   "id": "marina-7",
+   "name": "Carmen",
+   "hood": "marina",
+   "x": -0.343,
+   "y": -0.436,
+   "summary": "barista · wants to pay for a course",
+   "trait": "skeptical"
+  },
+  {
+   "id": "alamo-0",
+   "name": "Sofia",
+   "hood": "alamo",
+   "x": 0.263,
+   "y": 0.56,
+   "summary": "street-food vendor · wants to consolidate debt",
+   "trait": "busy"
+  },
+  {
+   "id": "alamo-1",
+   "name": "Rin",
+   "hood": "alamo",
+   "x": -0.546,
+   "y": 0.842,
+   "summary": "street-food vendor · wants to grow a small business",
+   "trait": "skeptical"
+  },
+  {
+   "id": "alamo-2",
+   "name": "Jamal",
+   "hood": "alamo",
+   "x": -0.391,
+   "y": -0.72,
+   "summary": "tailor · wants to cover rent gaps",
+   "trait": "busy"
+  },
+  {
+   "id": "alamo-3",
+   "name": "Lucía",
+   "hood": "alamo",
+   "x": -0.281,
+   "y": -0.375,
+   "summary": "tailor · wants to grow a small business",
+   "trait": "deal-seeker"
+  },
+  {
+   "id": "alamo-4",
+   "name": "Noah",
+   "hood": "alamo",
+   "x": -0.254,
+   "y": 0.651,
+   "summary": "bookkeeper · wants to grow a small business",
+   "trait": "cautious"
+  },
+  {
+   "id": "alamo-5",
+   "name": "Valeria",
+   "hood": "alamo",
+   "x": 0.81,
+   "y": -0.034,
+   "summary": "bike mechanic · wants to consolidate debt",
+   "trait": "cautious"
+  },
+  {
+   "id": "alamo-6",
+   "name": "Ana",
+   "hood": "alamo",
+   "x": 0.198,
+   "y": -0.419,
+   "summary": "home care worker · wants to consolidate debt",
+   "trait": "deal-seeker"
+  },
+  {
+   "id": "alamo-7",
+   "name": "Grace",
+   "hood": "alamo",
+   "x": -0.532,
+   "y": -0.242,
+   "summary": "home care worker · wants to pay for a course",
+   "trait": "skeptical"
+  },
+  {
+   "id": "sunset-0",
+   "name": "Rafael",
+   "hood": "sunset",
+   "x": 0.623,
+   "y": 0.303,
+   "summary": "tailor · wants to consolidate debt",
+   "trait": "deal-seeker"
+  },
+  {
+   "id": "sunset-1",
+   "name": "Mei",
+   "hood": "sunset",
+   "x": -0.803,
+   "y": 0.592,
+   "summary": "street-food vendor · wants to cover rent gaps",
+   "trait": "trusting"
+  },
+  {
+   "id": "sunset-2",
+   "name": "Diego",
+   "hood": "sunset",
+   "x": -0.549,
+   "y": -0.721,
+   "summary": "muralist · wants to cover rent gaps",
+   "trait": "cautious"
+  },
+  {
+   "id": "sunset-3",
+   "name": "Mateo",
+   "hood": "sunset",
+   "x": 0.233,
+   "y": 0.771,
+   "summary": "student · wants to pay for a course",
+   "trait": "skeptical"
+  },
+  {
+   "id": "sunset-4",
+   "name": "Priya",
+   "hood": "sunset",
+   "x": 0.458,
+   "y": 0.106,
+   "summary": "muralist · wants to grow a small business",
+   "trait": "deal-seeker"
+  },
+  {
+   "id": "sunset-5",
+   "name": "Luis",
+   "hood": "sunset",
+   "x": 0.88,
+   "y": -0.043,
+   "summary": "rideshare driver · wants to consolidate debt",
+   "trait": "trusting"
+  },
+  {
+   "id": "sunset-6",
+   "name": "Isabel",
+   "hood": "sunset",
+   "x": -0.31,
+   "y": 0.281,
+   "summary": "muralist · wants to consolidate debt",
+   "trait": "anxious about money"
+  },
+  {
+   "id": "sunset-7",
+   "name": "Elena",
+   "hood": "sunset",
+   "x": 0.062,
+   "y": -0.712,
+   "summary": "tailor · wants to buy a work tool",
+   "trait": "anxious about money"
+  }
+ ]
+}

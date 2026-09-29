@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "hiveflow-swarm"
+version = "0.1.0"
+description = "Hiveflow Swarm: delegate agents on Flower with SwarmMind + SwarmAuth, human approval and shared vaccines (health and finance)"
+license = { file = "LICENSE" }
+requires-python = ">=3.11,<4.0"
+dependencies = [
+    "flwr>=1.39.0,<2.0",
+    "openai>=2.16.0,<3.0.0",
+    "cryptography>=42",
+    "swarmauth @ git+https://github.com/hiveflowai/swarmauth.git",
+    "swarmmind @ git+https://github.com/hiveflowai/swarmmind.git",
+]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["agent", "director"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.flwr.app]
+# TODO: set to the Flower Hub username of the publisher before `flwr app publish`
+publisher = "TODO-flower-username"
+display-name = "Hiveflow Swarm"
+color = "amber"
+fab-format-version = 1
+flwr-version-target = "1.39.0"
+fab-include = ["agent/**/*.py", "swarmauth/**/*.py", "swarmmind/**/*.py", "LICENSE"]
+
+[tool.flwr.app.components]
+agentapp = "agent.agent_app:app"
+
+[tool.flwr.app.config]
+coordinator-model = "flower-endeavor-v1.0"
+participant-model = "openai/gpt-6-luna"
+pull-timeout = 150
+key-salt = ""
