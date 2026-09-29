@@ -186,6 +186,9 @@ def run_round(state: dict[str, Any], sg: SwarmGrid, coord_model: ModelClient, em
     pending_texts = {rep["offer"]: rep["text"] for res in results for rep in res["reports"]
                      if rep.get("payee") not in sc["trusted"] and rep.get("sender") != sc["sponsor"]
                      and not (rep["rule"] == "FLAGGED_BY_DELEGATE" and rep["count"] < 2)}
+    if pending_texts:
+        emit({"type": "swarm.coordinator_step", "round": r, "step": "triage",
+              "model": coord_model.model if coord_model.available else "rules", "items": len(pending_texts)})
     batch = coord_model.json(TRIAGE_BATCH_INSTRUCTIONS, json.dumps(
         {"messages": [{"id": k, "text": v} for k, v in pending_texts.items()]})) if pending_texts else None
     triaged = {str(i.get("id")): i for i in (batch or {}).get("items", []) if isinstance(i, dict)}
@@ -242,6 +245,8 @@ def run_round(state: dict[str, Any], sg: SwarmGrid, coord_model: ModelClient, em
                     stances[e.get("stance", "neutral")] = stances.get(e.get("stance", "neutral"), 0) + 1
                     if e.get("note"):
                         notes.append(e["note"])
+    emit({"type": "swarm.coordinator_step", "round": r, "step": "insight",
+          "model": coord_model.model if coord_model.available else "rules"})
     model_insight = coord_model.json(INSIGHT_INSTRUCTIONS, json.dumps({
         "product": sc["legit"]["title"], "stances": stances, "sample_notes": notes[:40]}))
     insight = model_insight or {"headline": f"{stances.get('interested', 0)} delegates interested",
