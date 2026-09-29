@@ -42,7 +42,17 @@ for entry in "${HOODS[@]}"; do
   key="$DIR/keys/$hood"
   [[ -f "$key" ]] || ssh-keygen -q -t ecdsa -b 384 -N "" -f "$key" -C "sf-$hood"
   uv run flwr supernode register "$key.pub" sf-local --name "sf-$hood" --location "$loc" >/dev/null 2>&1 || true
-  uv run flower-supernode --root-certificates "$CERTS/ca.crt" --superlink 127.0.0.1:9092 \
+  # Participant models: Kimi on the first three sites, MiniMax on the others (Nebius Token Factory).
+  # Keys come from .env: NEBIUS_KIMI_API_KEY / NEBIUS_MINIMAX_API_KEY. Without them the node uses the
+  # default Flower endpoint (FLWR_MODEL_API_KEY) or the labelled fallback.
+  if [[ $port -lt 9203 ]]; then nb_key="${NEBIUS_KIMI_API_KEY:-}"; nb_model="dedicated/flowerai/Kimi-K2.7-Code-1OUHWL"
+  else nb_key="${NEBIUS_MINIMAX_API_KEY:-}"; nb_model="dedicated/flowerai/MiniMax-M3-OOLI9o"; fi
+  node_env=()
+  if [[ -n "$nb_key" ]]; then
+    node_env=(FLWR_MODEL_API_ENDPOINT="https://api.tokenfactory.tf-ca1.nebius.com/v1/responses"
+              FLWR_MODEL_API_KEY="$nb_key" SWARM_PARTICIPANT_MODEL="$nb_model")
+  fi
+  env "${node_env[@]}" uv run flower-supernode --root-certificates "$CERTS/ca.crt" --superlink 127.0.0.1:9092 \
     --auth-supernode-private-key "$key" --auth-supernode-public-key "$key.pub" \
     --port "$port" --isolation subprocess --node-config "hood=\"$hood\"" \
     > "$DIR/supernode-$hood.log" 2>&1 &

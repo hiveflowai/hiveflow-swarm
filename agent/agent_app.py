@@ -103,7 +103,9 @@ def _participant(agent: AgentSession, context: Context) -> None:
         sg.reply(seal(me, "status", {"error": code}, mandate, ts=now))
         agent.events.emit(_completed(f"rejected assignment: {code}"))
         return
-    model = ModelClient(str(_cfg(context, "participant-model", DEFAULT_PARTICIPANT_MODEL)), timeout=90)
+    # A SuperNode may pin its own model (e.g. Kimi on some hospitals, MiniMax on others)
+    model_id = os.environ.get("SWARM_PARTICIPANT_MODEL") or _cfg(context, "participant-model", DEFAULT_PARTICIPANT_MODEL)
+    model = ModelClient(str(model_id), timeout=90)
     body = run_participant(inc.opened.env.body, model, audit, now)
     leaks = leak_check(json.dumps(body), hoods, int(inc.opened.env.body.get("per_hood", 8)))
     audit.append("leak_check", f"node/{hoods[0]}", {"leaks": leaks})
