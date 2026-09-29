@@ -35,6 +35,13 @@ TRIAGE_INSTRUCTIONS = (
     "of the same scam but never a normal loan offer. "
     'Output: {"phrase": "...", "family": "<short label>", "why": "<= 20 words"}'
 )
+TRIAGE_BATCH_INSTRUCTIONS = (
+    "You are the security triage agent of a federation of delegate agents. Each message below either "
+    "tricked a delegate (the mandate blocked it) or was flagged by delegates as a scam. For EACH message "
+    "extract ONE short indicator phrase (2-5 words, copied verbatim from that message) that would catch "
+    "variants of the same scam but never a legitimate offer. "
+    'Output: {"items":[{"id":"<message id>","phrase":"...","family":"<label>","why":"<= 15 words"}]}'
+)
 INSIGHT_INSTRUCTIONS = (
     "You summarise feedback from delegate agents about an offer (a study or a product) for the institution "
     "that made it. You only see aggregated judgements, never personal data. "
@@ -176,6 +183,12 @@ def run_round(state: dict[str, Any], sg: SwarmGrid, coord_model: ModelClient, em
         known.setdefault(scope_of(v.get("origin_hood", "")), set()).update(v["pattern"]["indicators"])
     candidates = []
     seen_offers = set()
+    pending_texts = {rep["offer"]: rep["text"] for res in results for rep in res["reports"]
+                     if rep.get("payee") not in sc["trusted"] and rep.get("sender") != sc["sponsor"]
+                     and not (rep["rule"] == "FLAGGED_BY_DELEGATE" and rep["count"] < 2)}
+    batch = coord_model.json(TRIAGE_BATCH_INSTRUCTIONS, json.dumps(
+        {"messages": [{"id": k, "text": v} for k, v in pending_texts.items()]})) if pending_texts else None
+    triaged = {str(i.get("id")): i for i in (batch or {}).get("items", []) if isinstance(i, dict)}
     for res in results:
         for rep in res["reports"]:
             # guardrails against false positives: never vaccinate a sender or payee the mandates trust,
@@ -190,7 +203,7 @@ def run_round(state: dict[str, Any], sg: SwarmGrid, coord_model: ModelClient, em
                 continue
             seen_offers.add((sk, rep["offer"]))
             known_here = known.setdefault(sk, set())
-            out = coord_model.json(TRIAGE_INSTRUCTIONS, json.dumps({"message": rep["text"], "blocked_rule": rep["rule"]}))
+            out = triaged.get(rep["offer"])
             phrase = _valid_phrase((out or {}).get("phrase"), rep["text"], sc["legit"]["text"])
             decided_by = coord_model.model if phrase else "rules"
             phrase = phrase or _fallback_phrase(rep["text"], sc["legit"]["text"])

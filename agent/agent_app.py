@@ -66,7 +66,7 @@ def _coordinator(agent: AgentSession, context: Context) -> None:
     except ValueError:
         state = {"round": 1, "mode": "federated", "note": agent.prompt[:200]}
     model = ModelClient(str(state.get("coordinator_model") or _cfg(context, "coordinator-model", DEFAULT_COORDINATOR_MODEL)),
-                        timeout=45)
+                        timeout=100)
     audit = _audit("coordinator", trust.coordinator())
     sg = SwarmGrid(agent.grid, trust.coordinator(), audit, trust.federation_roots(), "coordinator")
 

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "hiveflow-swarm"
-version = "0.1.0"
+version = "0.1.1"
 description = "Hiveflow Swarm: delegate agents on Flower with SwarmMind + SwarmAuth, human approval and shared vaccines (health and finance)"
 license = { file = "LICENSE" }
 requires-python = ">=3.11,<4.0"
@@ -42,5 +42,5 @@ agentapp = "agent.agent_app:app"
 [tool.flwr.app.config]
 coordinator-model = "flower-endeavor-v1.0"
 participant-model = "openai/gpt-6-luna"
-pull-timeout = 150
+pull-timeout = 120
 key-salt = ""

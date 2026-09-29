@@ -38,8 +38,9 @@ class ModelClient:
         if self._client is None:
             return None
         try:
+            extra = {"reasoning": {"effort": "low"}} if "endeavor" in self.model else {}
             resp = self._client.responses.create(
-                model=self.model,
+                model=self.model, **extra,
                 instructions=instructions + "\nRespond with a single JSON object and nothing else.",
                 input=[{"type": "message", "role": "user", "content": prompt}],
             )
