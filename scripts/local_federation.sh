@@ -52,7 +52,7 @@ for entry in "${HOODS[@]}"; do
     node_env=(FLWR_MODEL_API_ENDPOINT="https://api.tokenfactory.tf-ca1.nebius.com/v1/responses"
               FLWR_MODEL_API_KEY="$nb_key" SWARM_PARTICIPANT_MODEL="$nb_model")
   fi
-  env "${node_env[@]}" uv run flower-supernode --root-certificates "$CERTS/ca.crt" --superlink 127.0.0.1:9092 \
+  env ${node_env[@]+"${node_env[@]}"} uv run flower-supernode --root-certificates "$CERTS/ca.crt" --superlink 127.0.0.1:9092 \
     --auth-supernode-private-key "$key" --auth-supernode-public-key "$key.pub" \
     --port "$port" --isolation subprocess --node-config "hood=\"$hood\"" \
     > "$DIR/supernode-$hood.log" 2>&1 &
