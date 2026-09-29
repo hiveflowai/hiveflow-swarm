@@ -150,10 +150,11 @@ def process_hood(hood: str, spec: dict[str, Any], ctx: dict[str, Any], model: Mo
         verdict = s1.get(o["id"])
         if system1.blocks(verdict):
             s1_blocked += 1
+            conf_pct = int(round(verdict["confidence"] * 100))  # signed logs take integers only
             outcomes[d.id]["events"].append({"offer": o["id"], "result": "screened", "rule": f"SYSTEM1:{verdict['label']}",
-                                             "confidence": verdict["confidence"], "decided_by": verdict["model"]})
+                                             "confidence_pct": conf_pct, "decided_by": verdict["model"]})
             audit.append("system1_block", actor, {"delegate": d.id, "offer": o["id"], "label": verdict["label"],
-                                                  "confidence": verdict["confidence"]})
+                                                  "confidence_pct": conf_pct})
             reports.setdefault(o["id"], {"offer": o["id"], "sender": o["sender"], "title": o["title"], "text": o["text"],
                                          "payee": o["ask"].get("payee"), "rule": f"SYSTEM1:{verdict['label']}",
                                          "hood": hood, "count": 0})["count"] += 1
@@ -249,7 +250,8 @@ def process_hood(hood: str, spec: dict[str, Any], ctx: dict[str, Any], model: Mo
         "stats": {"delegates": len(dels), "offers": len(offers), "screened": screened, "fooled": fooled,
                   "blocked": blocked, "awaiting_human": len(approvals), "identity_rejected": len(identity_rejected),
                   "system1_blocked": s1_blocked, "flagged": flagged, "system1": "jev" if system1.available() else "none",
-                  "model_calls": 1 if to_model and model.available else 0},
+                  "model_calls": 1 if to_model and model.available else 0,
+                  "model_error": (model.last_error or "")[:120]},
     }
 
 

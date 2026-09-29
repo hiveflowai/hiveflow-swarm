@@ -31,3 +31,22 @@ def test_system1_confidence_gated(monkeypatch):
     assert r["label"] == "payment_scam" and system1.blocks(r)
     answer["answers"]["kind"]["confidence"] = 0.4
     assert not system1.blocks(system1.triage("unclear"))
+
+
+def test_round_with_system1_active(tmp_path, monkeypatch):
+    """Jev's float confidence must never break the signed audit log."""
+    from pathlib import Path
+    from agent.sim import run_series
+    from swarmauth import verify_log
+
+    def fake(text, timeout=8.0):
+        scam = any(w in text.lower() for w in ("miracle", "genome", "fee"))
+        return {"label": "payment_scam" if scam else "legitimate", "confidence": 0.93 if scam else 0.97,
+                "probabilities": {}, "model": "jev-latest"}
+
+    monkeypatch.setattr(system1, "triage", fake)
+    s = run_series(3, "federated", Path(tmp_path) / "ev.jsonl", start=1_790_000_000, scenario="health")
+    assert sum(x["stats"]["system1_blocked"] for x in s) > 0
+    assert all(x["stats"]["reply_rejected"] == 0 for x in s)
+    for log in (Path(tmp_path) / "audit-federated").glob("*.jsonl"):
+        assert verify_log(log).ok
